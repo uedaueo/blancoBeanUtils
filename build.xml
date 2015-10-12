@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="blancoBeanUtils" default="build" basedir=".">
 	<!-- blancoAnt(0.2.1)により自動生成されました。 (2011/01/10) -->
-	<property name="version" value="0.0.1" />
+	<property name="version" value="1.0.0" />
 
 	<property name="project" value="blancoBeanUtils" />
 	<property name="project.lower" value="blancobeanutils" />
