@@ -1,0 +1,7 @@
+2011.01.?? (0.0.2)
+  copyTo メソッドを配列に対応させました。
+  TODO toString を BlancoValueObject から BlancoBeanUtils に移動。
+  TODO compareTo の追加。
+
+2011.01.10 (0.0.1)
+  新規プロダクトを作成。
