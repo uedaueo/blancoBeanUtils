@@ -66,13 +66,7 @@
 			<!-- classの取り込み (※sampleは除外) -->
 			<zipfileset dir="bin" includes="**/*" excludes="blanco/sample/**" />
 			<!-- Javaソースコード(通常)の取り込み (※sampleは除外) -->
-			<zipfileset dir="src" includes="**/*" prefix="src" excludes="blanco/sample/**" />
-			<!-- Javaソースコード(自動生成)の取り込み (※sampleは除外) -->
-			<zipfileset dir="blanco/main" includes="**/*.java" prefix="src" excludes="blanco/sample/**" />
-			<!-- プロパティファイルの取り込み -->
-			<zipfileset dir="blanco/main" includes="**/*.properties" excludes="blanco/sample/**" />
-			<!-- 自動生成の原料 (meta) の取り込み -->
-			<zipfileset dir="meta" prefix="doc/meta" />
+			<zipfileset dir="src/main/java" includes="**/*" prefix="src" excludes="blanco/sample/**" />
 		</jar>
 	</target>
 
@@ -80,8 +74,7 @@
 		<delete dir="bin" />
 		<mkdir dir="bin" />
 		<javac destdir="bin" debug="true" source="1.6" target="1.6" fork="true" encoding="${encoding}">
-			<src path="blanco/main/" />
-			<src path="src/" />
+			<src path="src/main/java/" />
 			<classpath>
 				<!-- ワイルドカードで一括取り込み -->
 				<fileset dir="lib" includes="*.jar" />
@@ -89,19 +82,6 @@
 			</classpath>
 			<include name="**/*.java" />
 		</javac>
-	</target>
-
-	<target name="javadoc">
-		<echo>JavaDocを生成します。</echo>
-		<delete dir="javadoc" />
-		<javadoc destdir="javadoc" encoding="${encoding}">
-			<fileset dir="src" includes="**/*.java" />
-			<fileset dir="blanco/main" includes="**/*.java" />
-			<classpath>
-				<fileset dir="lib" includes="*.jar" />
-				<fileset dir="lib.ant" includes="*.jar" />
-			</classpath>
-		</javadoc>
 	</target>
 
 	<target name="meta.clean">
@@ -113,14 +93,7 @@
 		</delete>
 	</target>
 
-	<target name="meta">
-		<blancomessage metadir="meta/program" encoding="${encoding}" />
-		<blancovalueobject metadir="meta/program" encoding="${encoding}" />
-
-		<!-- TODO: ここに自身のantタスクを追加してください。 -->
-	</target>
-
-	<target name="build" depends="meta.clean,meta,compile,jar,pack">
+	<target name="build" depends="compile,jar,pack">
 	</target>
 
 </project>
