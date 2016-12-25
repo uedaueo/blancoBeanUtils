@@ -11,14 +11,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/blancocg-1.4.9.jar"/>
-	<classpathentry kind="lib" path="lib/blancocommons-1.1.5.jar"/>
-	<classpathentry excluding="blanco/sample/**/*" kind="src" output="target/classes" path="blanco/main">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
