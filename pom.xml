@@ -5,9 +5,51 @@
 	<groupId>blanco.beanutils</groupId>
 	<artifactId>blanco-beanutils</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<name>blanco-beanutils</name>
 	<url>https://igapyon.github.io/blancofw-maven2</url>
+
+	<!-- basic spec for jar -->
+	<properties>
+		<!-- set source as UTF-8 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<github.global.server>github</github.global.server>
+		<git.branchName>gh-pages-poi4</git.branchName>
+		<git.repositoryOwner>uedaueo</git.repositoryOwner>
+		<git.repositoryName>blancofw-maven2</git.repositoryName>
+		<git.isMerge>true</git.isMerge>
+	</properties>
+
+	<distributionManagement>
+		<!-- deploy into local repository for github -->
+		<repository>
+			<id>deploy-repository</id>
+			<name>deployRepository</name>
+			<url>file:///${project.build.directory}/${git.branchName}</url>
+		</repository>
+	</distributionManagement>
+
+	<!-- ===================================== -->
+	<!-- blanco Framework standard maven defs. -->
+	<!-- v201612251240 ....................... -->
+	<!-- ===================================== -->
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<!-- blancofw repository -->
+		<repository>
+			<id>blancofw</id>
+			<name>blancofw maven repos</name>
+			<url>https://raw.github.com/uedaueo/blancofw-maven2/${git.branchName}/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -23,36 +65,33 @@
 		</dependency>
 	</dependencies>
 
-	<!-- ===================================== -->
-	<!-- blanco Framework standard maven defs. -->
-	<!-- v201612251240 ....................... -->
-	<!-- ===================================== -->
-	<repositories>
-		<!-- blancofw repository -->
-		<repository>
-			<id>blancofw</id>
-			<name>blancofw maven repos</name>
-			<url>https://igapyon.github.io/blancofw-maven2</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<!-- deploy into local repository for github -->
-		<repository>
-			<id>deploy-repository</id>
-			<name>deployRepository</name>
-			<url>file:///${project.basedir}/../blancofw-maven2</url>
-		</repository>
-	</distributionManagement>
-
-	<!-- basic spec for jar -->
-	<properties>
-		<!-- set source as UTF-8 -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<build>
 		<plugins>
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<version>1.8</version>
+			<executions>
+				<execution>
+					<id>blanco-clean</id>
+					<phase>clean</phase>
+					<configuration>
+						<target>
+							<delete dir="tmp" />
+							<delete dir="blanco" />
+							<delete dir="sample" />
+							<delete dir="bin" />
+							<delete dir="classes" />
+							<mkdir dir="bin" />
+						</target>
+					</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+			</executions>
+			</plugin>
+
 			<!-- add java source folder -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -74,14 +113,14 @@
 				</executions>
 			</plugin>
 
-			<!-- compile as 1.6 compatible -->
+			<!-- compile as 1.8 compatible -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
 					<excludes>
 						<exclude>blanco/sample/**/*</exclude>
 					</excludes>
@@ -109,21 +148,37 @@
 				</configuration>
 			</plugin>
 
-			<!-- copy jar files into lib directory. -->
 			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<configuration>
+					<!-- git commit message -->
+					<message>Maven artifacts for ${project.version}</message>
+					<noJekyll>true</noJekyll>
+					<outputDirectory>${project.build.directory}/${git.branchName}</outputDirectory>
+					<branch>refs/heads/${git.branchName}</branch>
+					<includes>
+						<include>**/*</include>
+					</includes>
+
+					<repositoryName>${git.repositoryName}</repositoryName>
+					<repositoryOwner>${git.repositoryOwner}</repositoryOwner>
+
+					<!-- true：履歴を残す　false：直近バージョンのみ repositoryに残る -->
+					<merge>${git.isMerge}</merge>
+
+				</configuration>
 				<executions>
 					<execution>
-						<phase>install</phase>
 						<goals>
-							<goal>copy-dependencies</goal>
+							<goal>site</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-						</configuration>
+						<phase>deploy</phase>
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>

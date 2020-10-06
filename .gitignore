@@ -1,3 +1,11 @@
+.svn
+.classpath
+.project
+.idea
+.DS_Store
+*.iml
 /bin/
 /blancoBeanUtils-*-src.zip
 /target/
+/classes
+~$*
