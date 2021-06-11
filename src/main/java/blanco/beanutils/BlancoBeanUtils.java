@@ -21,30 +21,30 @@ import blanco.commons.util.BlancoStringUtil;
 
 public class BlancoBeanUtils {
     /**
-     * copyTo メソッドを生成します。
+     * Generates the copyTo method.
      * 
      * @param cgSourceFile
-     *            ソースコード情報。入力に利用します。
+     *            Source code information. Used for input.
      * @param cgClass
-     *            クラス情報。入出力に利用します。
+     *            Class information. Used for input and output.
      */
     public static void generateCopyToMethod(
             final BlancoCgSourceFile cgSourceFile, final BlancoCgClass cgClass) {
 
-        // BlancoCgObjectFactoryクラスのインスタンスを取得します。
+        // Gets an instance of BlancoCgObjectFactory class.
         final BlancoCgObjectFactory cgFactory = BlancoCgObjectFactory
                 .getInstance();
 
         final BlancoCgMethod method = cgFactory.createMethod("copyTo",
-                "このバリューオブジェクトを指定のターゲットに複写します。");
+                "Copies this value object to the specified target.");
         cgClass.getMethodList().add(method);
 
-        method.getLangDoc().getDescriptionList().add("<P>使用上の注意</P>");
+        method.getLangDoc().getDescriptionList().add("<P>Cautions for use</P>");
         method.getLangDoc().getDescriptionList().add("<UL>");
         method.getLangDoc().getDescriptionList().add(
-                "<LI>オブジェクトのシャロー範囲のみ複写処理対象となります。");
+                "<LI>Only the shallow range of the object will be subject to the copying process.");
         method.getLangDoc().getDescriptionList().add(
-                "<LI>オブジェクトが循環参照している場合には、このメソッドは使わないでください。");
+                "<LI>Do not use this method if the object has a circular reference.");
         method.getLangDoc().getDescriptionList().add("</UL>");
 
         method.getParameterList().add(
@@ -53,7 +53,7 @@ public class BlancoBeanUtils {
 
         final List<java.lang.String> listLine = method.getLineList();
 
-        // TODO ディープコピーの考慮の追加。
+        // TODO: Adds consideration of deep copy.
 
         listLine.add("if (target == null) {");
         listLine.add("throw new IllegalArgumentException(\"Bug: "
@@ -68,7 +68,7 @@ public class BlancoBeanUtils {
         for (int indexField = 0; indexField < cgClass.getFieldList().size(); indexField++) {
             final BlancoCgField field = cgClass.getFieldList().get(indexField);
 
-            // 配列情報を調整。
+            // Adjusts the array information.
             boolean isArray = field.getType().getArray();
             if (isArray == false && field.getType().getName().endsWith("[]")) {
                 isArray = true;
@@ -145,7 +145,7 @@ public class BlancoBeanUtils {
                 || typeNameWithoutGenerics.equals("long")
                 || typeNameWithoutGenerics.equals("float")
                 || typeNameWithoutGenerics.equals("double")) {
-            // プリミティブ型
+            // Primitive type
             line.add(destVarName + " = " + origVarName + ";");
             return line;
         } else if (typeNameWithoutGenerics.equals("java.lang.Boolean")
@@ -156,7 +156,7 @@ public class BlancoBeanUtils {
                 || typeNameWithoutGenerics.equals("java.lang.Long")
                 || typeNameWithoutGenerics.equals("java.lang.Float")
                 || typeNameWithoutGenerics.equals("java.lang.Double")) {
-            // プリミティブ型のラッパークラス。
+            // Primitive wrapper class.
             line.add(destVarName + " = " + origVarName + ";");
             return line;
         } else if (typeNameWithoutGenerics.equals("java.lang.String")) {
@@ -171,7 +171,7 @@ public class BlancoBeanUtils {
                     + ".getTime()));");
             return line;
         } else if (typeNameWithoutGenerics.equals("java.util.List")) {
-            // TODO <?> の場合の挙動の改善。
+            // TODO: Improves behavior in case <?>.
             String genericsType = "?";
             if (typeNameWithoutGenerics.equals(typeNameWithoutArray) == false) {
                 genericsType = typeNameWithoutArray.substring(
@@ -192,7 +192,7 @@ public class BlancoBeanUtils {
             line.add("}");
             return line;
         } else if (typeNameWithoutGenerics.equals("java.util.Map")) {
-            // TODO <?> の場合の挙動の改善。
+            // TODO: Improves behavior in case <?>.
             String genericsType = "?, ?";
             if (typeNameWithoutGenerics.equals(typeNameWithoutArray) == false) {
                 genericsType = typeNameWithoutArray.substring(
@@ -223,9 +223,9 @@ public class BlancoBeanUtils {
             line.add("}");
             return line;
         } else {
-            // サポート外の型の場合にはここに入ります。
-            line.add("// フィールド[" + fieldName + "]はサポート外の型[" + fieldType
-                    + "]です。");
+            // It will go here if it is an unsupported type.
+            line.add("// Field[" + fieldName + "] is an unsupported type[" + fieldType
+                    + "].");
             return line;
         }
     }
